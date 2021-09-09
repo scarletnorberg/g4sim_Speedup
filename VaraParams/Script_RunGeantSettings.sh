@@ -10,8 +10,8 @@ for PAR in "${!parameters[@]}"; do                # parameter loop
     for VAL in "${!parameters[$PAR]}"; do         # current parameter's values loop
         LOG=log_${PAR}_${VAL}.txt                 # initialize log for the current parameter and value 
         echo $PAR $VAL
-        #cmsRun PPD_RunIISummer20UL17SIM_0_cfg.py paramNames=$PAR paramValues=$VAL >& $LOG     # logs the cmsRun, parsing the current paramter and value
-        python PPD_RunIISummer20UL17SIM_0_cfg.py paramNames=$PAR paramValues=$VAL >& $LOG dump=1  # config dump testing
+        cmsRun PPD_RunIISummer20UL17SIM_0_cfg.py paramNames=$PAR paramValues=$VAL >& $LOG     # logs the cmsRun, parsing the current paramter and value
+        #python PPD_RunIISummer20UL17SIM_0_cfg.py paramNames=$PAR paramValues=$VAL >& $LOG dump=1  # config dump testing
 	echo $VAL $(grep "Total loop" $LOG | tail -n 1 | rev | cut -d' ' -f1 | rev)           # prints the current value and Total loop time of the cmsRun
    done
 done
