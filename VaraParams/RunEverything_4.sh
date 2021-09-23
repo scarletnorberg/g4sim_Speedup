@@ -17,12 +17,11 @@
 declare -A parameters
 
 # declare the list of values
-ProductionCuts=(0.5 1.0 2.0 5.0 10.0 12.0 14.0 18.0 20.0)
-#Mag_Values=(0.01 0.015 0.05 0.1 0.15 0.2 0.25 0.3 0.35)
+Energy_vals=(200 250 300 350 400 450 500 550 800)
+Mag_Values=(0.01 0.015 0.05 0.1 0.15 0.2 0.25 0.3 0.35)
 #RusRo_vals=(0.1 0.01 0.001 0.0001 0.00001)
 
 # assigning array elements a specific value list
-parameters[ProductionCut]=ProductionCuts[@]
 parameters[RusRoGammaEnergyLimit]=Energy_vals[@]
 parameters[RusRoNeutronEnergyLimit]=Energy_vals[@]
 parameters[EnergyThSimple]=Mag_Values[@]
