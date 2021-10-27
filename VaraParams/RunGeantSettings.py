@@ -1,6 +1,8 @@
 ### imports ###
 import os       # to use operating-system-dependent functionalities
 import re       # to use regular expressions matching operations
+from collections import OrderedDict
+from copy import deepcopy
 
 ### Values ###
 
@@ -9,52 +11,72 @@ import re       # to use regular expressions matching operations
 RusRo_vals = [0.1, 0.01]
 Energy_vals = [200, 250]
 
-### Parameters dictionary ###
 
-parameters = dict()  # initialization the dictionary
+### function for recursive for-loops ###
 
-## adding key-value pairs 
-#parameters['RusRoGammaEnergyLimit']=Energy_vals
-#parameters['RusRoElectronEnergyLimit']=Energy_vals
-
-#parameters['RusRoEcalGamma']=RusRo_vals
-#parameters['RusRoEcalNeutron']=RusRo_vals
+## The function takes 5 arguments, the position, a list of parameters,
+## two empty lists to be filled: one for parameters, the other for values,
+## and an empty set to be filled with the possible combination of values
 
 
-#parameters[('RusRoGammaEnergyLimit','RusRoElectronEnergyLimit')]=Energy_vals
+def varyAll(pos,paramlist,pars,sig,sigs):
+    param = paramlist[pos][0]
+    vals = paramlist[pos][1]
+    
+    for v in vals:            # for-loops the values list
+        stmp = sig[:]+[v]     # the current value in for-loop    
+        
+	if param not in pars:    # checks to see if parameter is in list
+	    pars.append(param)   # adds parameter to list
+     
+	# check if last param
+        if pos+1==len(paramlist):
+            sigs.add(tuple(stmp))
+        else:
+            varyAll(pos+1,paramlist,pars,stmp,sigs)
+    
+    parameters = pars	
+    values = sigs
+
+    return(parameters,values)
+
+
 
 ## running at least two parameters and two lists of values for each
-parameters['RusRoGammaEnergyLimit, RusRoElectronEnergyLimit']=[Energy_vals,Energy_vals]
 
-### loop ###
-for PARAM, VALUES in parameters.items():       # loops key-value pairs
-	#for VAL in VALUES:		       # loops the values 
-	print(PARAM,VALUES)                    # prints the current parameter and value in the loop
+params = OrderedDict([
+	("RusRoGammaEnergyLimit", Energy_vals),
+	("RusRoElectronEnergyLimit", Energy_vals)
+])
+
+parameters = []
+sigs = set()
+
+varyAll(0,list(params.iteritems()),parameters,[],sigs)
+print("")
+
+# for-loops the set of values
+for VALS in sigs:
+	print(parameters, VALS)
 	print(" ")
-	VALS1 = VALUES[0]
-	VALS2 = VALUES[1]
-	
-	for VAL1 in VALS1:				    # loops values of the first parameter
-		for VAL2 in VALS2:                          # loops values of the second parameter with one value of the first
+	PARS = str(parameters).strip("[]").replace(" ","").replace("'","")       # makes a string of the parameter list; elimiates unwanted characters
+	VALS = str(VALS).strip("()").replace(" ","")                             # makes a string of the list of values; eliminates unwanted characters
 
-			PARS = str(PARAM).replace(" ","")                     # makes a string of the parameter list; elimiates spaces
-			# make a list of the current value from the first and second parameters
-			VALS = str([VAL1, VAL2]).strip("[]").replace(" ","")  # makes a string of the list of values; eliminates brackets and spaces
-			print(PARS, VALS)			
+	## Parsing
+	INPUT = str('paramNames=%s paramValues=%s'%(PARS,VALS))                  # argumets to parse in Running
+	LOG = "log_"+str(PARS).replace(",","_")+"_"+str(VALS).replace(",","_")   # log file for current parameters and values
 
-			## Parsing
-			INPUT = str('paramNames=%s paramValues=%s'%(PARS,VALS))                  # argumets to parse in Running
-        		LOG = "log_"+str(PARS).replace(",","_")+"_"+str(VALS).replace(",","_")   # log file for current parameters and values
-			
-			## Running
-			os.system("cmsRun PPD_RunIISummer20UL17SIM_0_cfg.py "+INPUT+" >& "+LOG+".txt")            # cmsRun of config into LOG
-			#os.system("python PPD_RunIISummer20UL17SIM_0_cfg.py "+INPUT+" >& "+LOG+".txt dump=1")      # config dump into LOG
+	## Running
+	os.system("cmsRun PPD_RunIISummer20UL17SIM_0_cfg.py "+INPUT+" >& "+LOG+".txt")            # cmsRun of config into LOG
+	#os.system("python PPD_RunIISummer20UL17SIM_0_cfg.py "+INPUT+" >& "+LOG+".txt dump=1")      # config dump into LOG
+
 		
-			## run-time print
+	## run-time print
 
-			log = open("log_"+str(PARS).replace(",","_")+"_"+str(VALS).replace(",","_")+".txt","r")   # open to read the log file
-			run_time = "Total loop"									  # string to search in the log
+	log = open("log_"+str(PARS).replace(",","_")+"_"+str(VALS).replace(",","_")+".txt","r")   # open to read the log file
+	run_time = "Total loop"								          # string to search in the log
 
-			for line in log:                         # loop through the all the lines in the log
-				if re.search(run_time, line):    
-					print(line)              # print the line in the log that contains the specified string
+	for line in log:                         # loop through the all the lines in the log
+		if re.search(run_time, line):    
+			print(line)              # print the line in the log that contains the specified string
+
