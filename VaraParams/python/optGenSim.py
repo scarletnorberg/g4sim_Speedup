@@ -30,8 +30,8 @@ if paramValueCounter != len(options.paramValues):
     raise ValueError("Used {} paramValues, but {} were provided".format(paramValueCounter,len(options.paramValues)))
 _pnametmp = '_'.join(_pnames)
 
-options._root = "sim_"+str(options.paramNames).strip("[']")+"_"+str(options.paramValues).strip("[']")
-
+options._root = "sim_"+str(options.paramNames).strip("[']").replace("', '","_")+"_"+str(options.paramValues).strip("[']").replace(", ","_")
+print("ROOT options", options._root)
 
 def resetSeeds(process,options):
     # reset all random numbers to ensure statistically distinct but reproducible jobs
