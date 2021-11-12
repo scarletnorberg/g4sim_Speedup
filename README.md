@@ -12,7 +12,12 @@ xrdcp root://cmseos.fnal.gov//store/user/snorberg/GEANT/PPD-RunIISummer20UL17GEN
 python RunGeantSettings.sh
 #./Script_RunGeantSettings.sh
 ```
-
+```bash
+To graph
+cd EDM_Ntuple/bin/
+scram b -j4
+OutputEDMtoNtuple /store/user/pedrok/g4speedup/run5/ 
+```
 *Script_RunGeantSettings.sh* calls a second script, *RunEverything.sh*, which contains two lists, 
 one for the desired parameters and the other for the values.
 

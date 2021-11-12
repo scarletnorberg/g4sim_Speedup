@@ -1,0 +1,15 @@
+<use   name="DataFormats/FWLite"/>
+<use   name="DataFormats/EcalDetId"/>
+<use   name="DataFormats/PatCandidates"/>
+<use   name="DataFormats/TrackReco"/>
+<use   name="DQMServices/Core"/>
+<use   name="FWCore/Framework"/>
+<use   name="FWCore/Utilities"/>
+<use   name="PhysicsTools/FWLite"/>
+<use   name="Validation/EcalHits"/>
+<use   name="boost"/>
+<use   name="root"/>
+<use   name="xrootd"/>
+<lib   name="XrdCl"/>
+<lib   name="XrdUtils"/>
+<bin   file="OutputEDMtoNtuple.cc"/>
