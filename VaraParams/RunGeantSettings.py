@@ -48,7 +48,7 @@ def varyAll(pos,paramlist,pars,sig,sigs):
 
 params = OrderedDict([
 	("EnergyThSimple", EnergyThSimple_vals),
-	("RusRoNeutronEnergyLimit", Energy_vals)
+	("RusRoGammaEnergyLimit", Energy_vals)
 ])
 
 parameters = []
