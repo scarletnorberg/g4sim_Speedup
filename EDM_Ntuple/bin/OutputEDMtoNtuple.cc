@@ -86,7 +86,7 @@ int main(int argc,char**argv) {
          fwlite::Handle<std::vector<PCaloHit>> HH;
          //https://github.com/cms-sw/cmssw/blob/master/SimDataFormats/CaloHit/interface/PCaloHit.h information to extract 
          TFile *hfile = hfile = TFile::Open(rootfileend.c_str(),"RECREATE");
-         TTree *tree = new TTree("T","GeantV");
+         TTree *tree = new TTree("Ecal_Hcal_Geant_Check","GeantV");
          Float_t EcalHitsEBenergyEM;
          Float_t EcalHitsEBenergy;
          Float_t EcalHitsEBenergyHad;

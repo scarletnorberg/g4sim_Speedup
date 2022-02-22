@@ -12,7 +12,7 @@ from copy import deepcopy
 #Energy_vals = [0, 5, 10, 15, 20]#, 25, 30, 35, 40, 45, 50, 60, 65, 70, 75, 80, 85, 90, 95, 100, 200, 300]
 
 EnergyThSimple_vals = [0.015, 0.1, 0.3, 0.6, 1.0]
-#Energy_GammaVals = [5]#,10, 0, 30, 60, 200]
+Energy_GammaVals = [5,10, 0, 30, 60, 200]
 Energy_vals = [10, 0, 30, 60, 200]
 Prod_Cuts=[0.5, 1, 2, 5, 10, 12, 14, 18, 20]
 ### function for recursive for-loops ###
