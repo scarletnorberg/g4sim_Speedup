@@ -5,7 +5,7 @@ import g4sim_Speedup.VaraParams.ParamModifier as pm
 
 params = pm.getAllClasses(pm)
 
-options = VarParsing()
+options = VarParsing('analysis')
 
 options.register("paramNames", "", VarParsing.multiplicity.list, VarParsing.varType.string, "Geant4 parameters to modify (choices: {})".format(','.join(sorted(params))))
 options.register("paramValues", "", VarParsing.multiplicity.list, VarParsing.varType.float, "values for modified Geant4 parameters".format(','.join(sorted(params))))
