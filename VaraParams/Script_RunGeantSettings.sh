@@ -5,8 +5,8 @@
 ## prints out the time to run over all events, and logs the run of each iteration.
 
 #source ./RunEverything.sh
-VARIABLE=`python RunGeantSettings.py`
-echo ${VARIABLE}
+VARIABLE=`python RunGeantSettings_4b.py`
+echo "VARAIBLE" ${VARIABLE}
 
 cmsRun PPD_RunIISummer20UL17SIM_0_cfg.py ${VARIABLE} >& log1.txt
 
@@ -18,11 +18,12 @@ for i in "${my_array[@]}"
 do
         echo $i
     done
-
+echo "OHMYGOD"
 for PAR in "${!parameters[@]}"; do                # parameter loop
+    echo "IJUTYSHS"
     for VAL in "${!parameters[$PAR]}"; do         # current parameter's values loop
         LOG=log_${PAR}_${VAL}.txt                 # initialize log for the current parameter and value 
-        echo $PAR $VAL
+        echo "YESSSS" $PAR $VAL
         
         cmsRun PPD_RunIISummer20UL17SIM_0_cfg.py paramNames=$PAR paramValues=$VAL >& $LOG     # logs the cmsRun, parsing the current paramter and value
         #python PPD_RunIISummer20UL17SIM_0_cfg.py paramNames=$PAR paramValues=$VAL >& $LOG dump=1  # config dump testing

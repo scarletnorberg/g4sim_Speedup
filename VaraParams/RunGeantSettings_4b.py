@@ -63,18 +63,20 @@ print("")
 
 # for-loops the set of values
 for VALS in sigs:
-	print(parameters, VALS)
 	print(" ")
 	PARS = str(parameters).strip("[]").replace(" ","").replace("'","")       # makes a string of the parameter list; elimiates unwanted characters
 	VALS = str(VALS).strip("()").replace(" ","")                             # makes a string of the list of values; eliminates unwanted characters
-
+	if VALS[-1] == ",":
+	        VALS=VALS[:-1]
+	print(parameters, VALS)
 	## Parsing
 	INPUT = str('paramNames=%s paramValues=%s'%(PARS,VALS))                  # argumets to parse in Running
 	LOG = "log_"+str(PARS).replace(",","_")+"_"+str(VALS).replace(",","_")   # log file for current parameters and values
-
+	print ("BLAHTRYU", INPUT)
 	## Running
-	os.system("cmsRun PPD_RunIISummer20UL17SIM_0_cfg.py inputFiles=PPD-RunIISummer20UL17GEN-00001.root"+INPUT+" >& "+LOG+".txt")            # cmsRun of config into LOG
-	#os.system("python PPD_RunIISummer20UL17SIM_0_cfg.py "+INPUT+" >& "+LOG+".txt dump=1")      # config dump into LOG
+	#os.system("cmsRun PPD_RunIISummer20UL17SIM_0_cfg.py inputFiles=PPD-RunIISummer20UL17GEN-00001.root"+INPUT+" >& "+LOG+".txt")            # cmsRun of config into LOG
+	os.system("cmsRun PPD_RunIISummer20UL17SIM_0_cfg.py "+INPUT+" >& "+LOG+".txt")
+    #os.system("python PPD_RunIISummer20UL17SIM_0_cfg.py "+INPUT+" >& "+LOG+".txt dump=1")      # config dump into LOG
 
 		
 	## run-time print
