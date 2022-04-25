@@ -69,10 +69,10 @@ for VALS in sigs:
 	## Parsing
 	INPUT = str('paramNames=%s paramValues=%s'%(PARS,VALS))                  # argumets to parse in Running
 	LOG = "log_"+str(PARS).replace(",","_")+"_"+str(VALS).replace(",","_")   # log file for current parameters and values
-
 	## Running
-	os.system("cmsRun PPD_RunIISummer20UL17SIM_0_cfg.py "+INPUT+" >& "+LOG+".txt")            # cmsRun of config into LOG
-	#os.system("python PPD_RunIISummer20UL17SIM_0_cfg.py "+INPUT+" >& "+LOG+".txt dump=1")      # config dump into LOG
+	#os.system("cmsRun PPD_RunIISummer20UL17SIM_0_cfg.py inputFiles=PPD-RunIISummer20UL17GEN-00001.root"+INPUT+" >& "+LOG+".txt")            # cmsRun of config into LOG
+    os.system("cmsRun PPD_RunIISummer20UL17SIM_0_cfg.py "+INPUT+" >& "+LOG+".txt")	
+    #os.system("python PPD_RunIISummer20UL17SIM_0_cfg.py "+INPUT+" >& "+LOG+".txt dump=1")      # config dump into LOG
 
 		
 	## run-time print
