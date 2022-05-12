@@ -23,25 +23,15 @@
 # - Number of Global Begin Run Calls: 1
 
 import glob 
-import os
 import matplotlib.pyplot as plt
-import re
 
-#this function allows you to organize files by their decimal numbers
-numbers = re.compile(r'(\d+)')
-def numericalSort(value):
-    parts = numbers.split(value)
-    parts[1::2] = map(int, parts[1::2])
-    return parts
-
-#lists where time and change values are stored
-timeA = []
-timeB = []
-timeC = []
-timeD = []
-timeE = []
-timeF = []
-changes = []
+#nested lists
+testA = []
+testB = []
+testC = []
+testD = []
+testE = []
+testF = []
 
 #files
 fileA = []
@@ -52,60 +42,82 @@ fileE = []
 fileF = []
 directory = 'run2/'  #directory where files are located
 
-fil = sorted(glob.glob(directory + '*.txt'), key=numericalSort) #the glob library allows extracting the files from a specific directory and the sorted function organizes the files
+fil = glob.glob(directory + '*.txt')
 for file in fil:
-    if file.startswith('run2/log_RusRoEcalGamma_'):
+    if file.startswith(directory + 'log_RusRoEcalGamma_'):
         fileA.append(file)
-    if file.startswith('run2/log_RusRoHcalGamma_'):
+    if file.startswith(directory + 'log_RusRoHcalGamma_'):
         fileB.append(file)
-    if file.startswith('run2/log_RusRoMuonIronGamma_'):
+    if file.startswith(directory + 'log_RusRoMuonIronGamma_'):
         fileC.append(file)
-    if file.startswith('run2/log_RusRoEcalNeutron_'):
+    if file.startswith( directory + 'log_RusRoEcalNeutron_'):
         fileD.append(file)
-    if file.startswith('run2/log_RusRoHcalNeutron_'):
+    if file.startswith(directory + 'log_RusRoHcalNeutron_'):
         fileE.append(file)
-    if file.startswith('run2/log_RusRoMuonIronNeutron_'):
+    if file.startswith(directory + 'log_RusRoMuonIronNeutron_'):
         fileF.append(file)
 
-#Files_A
-def files_A(filename):
-	try:
-		with open(filename) as f_obj:
-			for line in f_obj:
-				if line.startswith(' - Total loop:'):
-					one = line.find('  ')
-					#two = line.find('s')	
-					a = line[one+2:]
-					#print(a)
-	except:
-		msg = filename + " file does not exist "
-		print(msg)
-	return float(a)
+#Files
+def files(filename):
+    try:
+        with open(filename) as f_obj:
+            for line in f_obj:
+                if line.startswith('('):
+                    one = line.find('[')
+                    two = line.find(']')
+                    a= line[one+1:two]
+                    #print(a)
+                if line.startswith(' - Total loop:'):
+                    one = line.find('  ')
+                    b = line[one+2:]
+                    #print(b)
+    except:
+        msg = filename + " file does not exist "
+        print(msg)
+    return float(a), float(b)
 
 #the for loop executes each of the files in the function
 for A,B,C,D,E,F in zip(fileA,fileB,fileC,fileD,fileE,fileF):
-    timeA.append(files_A(A))
-    timeB.append(files_A(B))
-    timeC.append(files_A(C))
-    timeD.append(files_A(D))
-    timeE.append(files_A(E))
-    timeF.append(files_A(F))
+    testA.append(files(A))
+    testB.append(files(B))
+    testC.append(files(C))
+    testD.append(files(D))
+    testE.append(files(E))
+    testF.append(files(F))
 
-#in this loop the value of the changes are extracted
-for value in fileA:
-	th = value.find('a_')
-	fr = value.find('x')
-	b = value[th+2:fr-2]
-	changes.append(float(b))
-	#print(value[th])
+#the sorted function organizes the nested lists starting from the first index
+testA = sorted(testA,key=lambda x: x[0])
+testB = sorted(testB,key=lambda x: x[0])
+testC = sorted(testC,key=lambda x: x[0])
+testD = sorted(testD,key=lambda x: x[0])
+testE = sorted(testE,key=lambda x: x[0])
+testF = sorted(testF,key=lambda x: x[0])
 
-#print(changes)
-#print(timeA)
-#print(timeB)
-#print(timeC)
-#print(timeD)
-#print(timeE)
-#print(timeF)
+#lists where time and change values are stored
+x=[]
+tA=[]
+tB=[]
+tC=[]
+tD=[]
+tE=[]
+tF=[]
+
+for A,B,C,D,E,F in zip(testA,testB,testC,testD,testE,testF):    
+    x.append(A[0])
+    tA.append(A[1])
+    tB.append(B[1])
+    tC.append(C[1])
+    tD.append(D[1])
+    tE.append(E[1])
+    tF.append(F[1])
+
+#print(x)
+#print(tA)
+#print(tB)
+#print(tC)
+#print(tD)
+#print(tE)
+#print(tF)
 
 #Parameters, if you need to use any of them to produce the graph you just have to uncomment
 #p = 'EnergyThSimple'
@@ -122,13 +134,14 @@ for value in fileA:
 p = 'Probability Parameters'
 
 #graphing the behavior of the parameter
-plt.plot(changes,timeA,marker='o',label='RusRoEcalGamma Variation')
-plt.plot(changes,timeB,marker='p',label='RusRoHcalGamma Variation')
-plt.plot(changes,timeC,marker='s',label='RusRoMuonIronGamma Variation')
-plt.plot(changes,timeD,marker='P',label='RusRoEcalNeutron Variation')
-plt.plot(changes,timeE,marker='x',label='RusRoHcalNeutron Variation')
-plt.plot(changes,timeF,marker='v',label='RusRoMuonIronNeutron Variation')
-plt.xscale('log')
+plt.figure(figsize=(13,6))
+plt.plot(x,tA,marker='o',label='RusRoEcalGamma Variation')
+plt.plot(x,tB,marker='p',label='RusRoHcalGamma Variation')
+plt.plot(x,tC,marker='s',label='RusRoMuonIronGamma Variation')
+plt.plot(x,tD,marker='P',label='RusRoEcalNeutron Variation')
+plt.plot(x,tE,marker='x',label='RusRoHcalNeutron Variation')
+plt.plot(x,tF,marker='v',label='RusRoMuonIronNeutron Variation')
+#plt.xscale('log')
 plt.xlabel('Changes')
 plt.ylabel('Total Loop')
 plt.title('{}'.format(p), size = 15)
