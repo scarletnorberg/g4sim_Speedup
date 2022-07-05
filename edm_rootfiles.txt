@@ -1,0 +1,4 @@
+/uscms/home/bcruz/nobackup/YOURWORKINGAREA/CMSSW_11_0_0/src/g4sim_Speedup/EDM_Ntuple/bin/sim_ProductionCut_1.0.root
+/uscms/home/bcruz/nobackup/YOURWORKINGAREA/CMSSW_11_0_0/src/g4sim_Speedup/EDM_Ntuple/bin/sim_ProductionCut_5.0.root
+/uscms/home/bcruz/nobackup/YOURWORKINGAREA/CMSSW_11_0_0/src/g4sim_Speedup/EDM_Ntuple/bin/sim_ProductionCut_10.0.root
+/uscms/home/bcruz/nobackup/YOURWORKINGAREA/CMSSW_11_0_0/src/g4sim_Speedup/EDM_Ntuple/bin/sim_ProductionCut_20.0.root
