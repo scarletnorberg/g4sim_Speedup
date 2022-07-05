@@ -110,6 +110,7 @@ int main(int argc,char**argv) {
                 obj1.getByLabel(ev, "g4SimHits", "EcalHitsEE");
                 HH.getByLabel(ev, "g4SimHits", "HcalHits");
                 //CaloHitsTk BeamHits
+         }
                for( auto const& ecee: *obj1) {
                      EcalHitsEE_energyEM.Fill(ecee.energyEM());
                      EcalHitsEE_energy.Fill(ecee.energy());
@@ -134,7 +135,7 @@ int main(int argc,char**argv) {
                        tree->Fill();
                 }
                   
-           }
+           //}
             //EcalHitsEB_energyEM.Write();
             //EcalHitsEB_energy.Write();
             //EcalHitsEE_energyEM.Write();
