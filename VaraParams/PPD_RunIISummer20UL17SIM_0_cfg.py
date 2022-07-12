@@ -6,7 +6,7 @@
 import FWCore.ParameterSet.Config as cms
 
 from Configuration.Eras.Era_Run2_2017_cff import Run2_2017
-from g4sim_Speedup.VaraParams.optGenSim import options, resetSeeds
+from g4SimHit_SpeedUp.VarParameters.optGenSim import options, resetSeeds
 
 process = cms.Process('SIM',Run2_2017)
 
@@ -23,13 +23,13 @@ process.load('Configuration.StandardSequences.SimIdeal_cff')
 process.load('Configuration.StandardSequences.EndOfProcess_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(1000),
+    input = cms.untracked.int32(1),
     output = cms.optional.untracked.allowed(cms.int32,cms.PSet)
 )
 
 # Input source
 process.source = cms.Source("PoolSource",
-    fileNames = cms.untracked.vstring('file:PPD-RunIISummer20UL17GEN-00001.root'),
+    fileNames = cms.untracked.vstring('file:'+options.inputroot+'.root'),
     secondaryFileNames = cms.untracked.vstring()
 )
 

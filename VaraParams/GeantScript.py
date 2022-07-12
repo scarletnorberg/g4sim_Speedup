@@ -3,6 +3,11 @@ import os    # to use operating-system-dependent functionalities
 import re    # to use regular expressiones for matching operations
 from collections import OrderedDict
 from copy import deepcopy
+from g4SimHit_SpeedUp.VarParameters.optGenSim import options
+
+### Input to Config ###
+options.inputroot = "PPD-RunIISummer20UL17GEN-00001"
+
 
 ### Values ### 
 ProdCuts_vals = [0.5]
@@ -57,7 +62,7 @@ if len(parameters)==1:
 	    print(PAR,VAL)
             print()
             ## Parsing
-            INPUT = str('paramNames=%s paramValues=%s'%(PAR,VAL))                # arguments to parse in Running
+            INPUT = str('inputroot=%s paramNames=%s paramValues=%s'%(options.inputroot,PAR,VAL))                # arguments to parse in Running
             LOG = "log_"+str(PAR).replace(",","_")+"_"+str(VAL).replace(",","_") # log file for current parameters and values
 
             ## Running
@@ -81,12 +86,11 @@ elif len(parameters)>=2:
         VALS = str(VALS).strip("()").replace(" ","")
 
         ## Parsing
-        INPUT = str('paramNames=%s paramValues=%s'%(PARS,VALS))                # arguments to parse in Running
+        INPUT = str('inputroot=%s paramNames=%s paramValues=%s'%(options.inputroot,PARS,VALS))                # arguments to parse in Running
         LOG = "log_"+str(PARS).replace(",","_")+"_"+str(VALS).replace(",","_") # log file for current parameters and values
 
         ## Running
         os.system("cmsRun PPD_RunIISummer20UL17SIM_0_cfg.py "+INPUT+" >& "+LOG+".txt")   # cmsRun of desired config file; dumped into LOG
-
 
         ## run-time print
         log = open("log_"+str(PARS).replace(",","_")+"_"+str(VALS).replace(",","_")+".txt","r")   # open to read the log file
