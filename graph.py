@@ -1,89 +1,102 @@
-#This crypt allows you to extract the data from a file and graph it.
-#Below you will find a guide to the output events from which you can take the values to plot.
-
-#TimeReport> Time report complete in 616.751 seconds
-# Time Summary:
-# - Min event:   14.4966
-# - Max event:   175.726
-# - Avg event:   95.1116
-# - Total loop:  541.517
-# - Total init:  57.3865
-# - Total job:   616.751
-# - EventSetup Lock:   0.150529
-# - EventSetup Get:   202.964
-# Event Throughput: 0.00369333 ev/s
-# CPU Summary:
-# - Total loop:  60.1669
-# - Total init:  7.58007
-# - Total extra: 0
-# - Total job:   68.0555
-# Processing Summary:
-# - Number of Events:  2
-# - Number of Global Begin Lumi Calls:  1
-# - Number of Global Begin Run Calls: 1
-
-from pathlib import Path
+import glob    # allows to extract the files from a specific directory 
 import os
 import matplotlib.pyplot as plt
+import re
 
-#lists where time and change values are stored
-time = []
+numbers = re.compile(r'(\d+)')
+### this function organizes files by their decimal numbers
+def numericalSort(value):
+    parts = numbers.split(value)
+    parts[1::2] = map(int, parts[1::2])
+    return parts
+
+### list where time and changed values are sorted 
 changes = []
 
-#files
-filenames = []
-directory = 'run4' #directory where files are located
+directory = 'runtest/'  ### directory where the files are located
 
-fil = Path(directory).glob('*')
-for file in fil:
-        if str(file).startswith('run4/log_DeltaChordSimple_'):
-                filenames.append(file)
+Files = sorted(glob.glob(directory + '*.txt'), key=numericalSort)
+#print(Files)
 
-#reading multiple files through one function
-def files(filename):
-        try:
-                with open(filename) as f_obj:
-                        for line in f_obj:
-                                if line.startswith(' - Total loop:'):
-                                        one = line.find('  ')
-                                        #two = line.find('s')
-                                        a = line[one+2:]
-        except:
-                msg = filename + " file does not exist "
-                print(msg)
-        return time.append(float(a))
+files_dict = dict()
 
-#the for loop executes each of the files in the function
-for filename in filenames:
-        files(filename)
+### for-loop to fill files_dict with each log file in directory
+for f in Files:
+    files_dict[f] = [] # fill with an empty list for each log file       
 
-#list of  the file names
-names = []
-for files in os.listdir(directory):
-        if files.startswith('log_DeltaChordSimple'):
-                names.append(files)
+#print(files_dict)
 
-#in this loop the value of the changes are extracted
-for value in names:
-        th = value.find('e_')
-        fr = value.find('x')
-        b = value[th+2:fr-2]
-        changes.append(float(b))
+### function to get the time loop from the log files
+def logline(filename):
+    try:
+        with open(filename) as logF:
+            for line in logF:
+                if line.startswith(' - Total loop:'):
+                    one = line.find(' ')
+                    #two = line.find('s')
+                    a = line[one+2:]
+                    a = a.replace("Total loop:","")
+    except:
+        print(filename + " file does not exist.")
 
-#Parameters, if you need to use any of them to produce the graph you just have to uncomment
-#p = 'EnergyThSimple'
-#p = 'DeltaOneStepSimple'
-p = 'DeltaChordSimple'
-#p = 'RusRoGammaEnergyLimit'
-#p = 'RusRoNeutronEnergyLimit'
-#p = 'RusRoEcalGamma'
-#p = 'RusRoHcalGamma'
+    return float(a)
 
-#graphing the behavior of the parameter
-plt.plot(changes,time,marker='o',label='Time Variation')
-plt.xlabel('Changes')
-plt.ylabel('Total Loop')
-plt.title('{}'.format(p), size = 15)
-plt.legend()
-plt.grid()
-plt.show()
+
+for k,v in files_dict.items():
+    v.append(logline(k))      # add total loop value to the respective empty list in files_dict
+
+#print(files_dict)
+
+mark = ['p','s']  # markers for more than one paramter modification
+
+for k,v in files_dict.items():
+    #print(changes, "\n")
+    filename = k.replace(directory,"")
+    param_val = filename.replace("log_","").replace(".txt","")
+    param = param_val.strip("_0.123456789")
+    val = param_val.strip(param)
+
+    vals_amount = val.count(".") 
+    #print(val,vals_amount)
+
+    if vals_amount == 1:   # only one parameter value modified
+        #print(val.strip("_"))
+        val = val.strip("_")
+        changes.append(float(val))
+        print("plotting ", param_val)
+        plt.plot(changes, v, marker='o', label=param)
+        plt.xscale('log')
+        plt.xlabel("Changes")
+        plt.ylabel("Total Loop")
+        plt.title(param+" Time Loop", size=15)
+        plt.legend(ncol=1, bbox_to_anchor=(1.1,0), loc='center right', fontsize=7)
+        plt.grid(True)
+        plt.tight_layout()
+        plt.savefig(directory+param_val+"_TimeLoop.png")
+
+        plt.close()
+        changes.clear()
+        #print(changes)
+        #print(" ") 
+    else:   # two parameter values modified
+        #print(val.split("_"))
+        vals = val.split("_")
+        changes = [float(x) for x in vals]
+        for c,m in zip(changes,mark):
+            print("plotting", param_val)
+            plt.plot(c, v, marker=m, label=param)
+        plt.xscale('log')
+        plt.xlabel("Changes")
+        plt.ylabel("Total Loop")
+        plt.title('{}'.format(param), size=15)
+        plt.legend(ncol=1, bbox_to_anchor=(1.1,0), loc='center right', fontsize=7)
+        plt.grid(True)
+        plt.tight_layout()
+        plt.savefig(directory+param_val+"_TimeLoop.png")
+
+        plt.close()
+        changes.clear()
+        #print(changes)
+        #print(" ")
+        
+
