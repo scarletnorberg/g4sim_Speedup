@@ -6,8 +6,7 @@
 import FWCore.ParameterSet.Config as cms
 
 from Configuration.Eras.Era_Run2_2017_cff import Run2_2017
-from g4sim_Speedup.VaraParams.optGenSim import options, resetSeeds
-#import FWCore.ParameterSet.VarParsing as VarParsing
+from g4SimHit_SpeedUp.VarParameters.optGenSim import options, resetSeeds
 
 #opt = VarParsing.VarParsing ('analysis')
 #opt.register("paramNames", "", VarParsing.VarParsing.multiplicity.list, VarParsing.VarParsing.varType.string,'')
@@ -37,9 +36,8 @@ process.maxEvents = cms.untracked.PSet(
 #for pf in options._inFiles:
 #    process =pf.apply(process)
 process.source = cms.Source("PoolSource",
-        fileNames = cms.untracked.vstring('file:PPD-RunIISummer20UL17GEN-00001.root'),#'file:TOP-RunIISummer19UL18wmLHEGEN-00006.root'),#'file:PPD-RunIISummer20UL17GEN-00001.root'),
-#        fileNames = cms.untracked.vstring('file:%s' % opt.inputFiles[0]), #pytho3
-        secondaryFileNames = cms.untracked.vstring()
+    fileNames = cms.untracked.vstring('file:'+options.inputroot+'.root'),
+    secondaryFileNames = cms.untracked.vstring()
 )
 
 process.options = cms.untracked.PSet(
