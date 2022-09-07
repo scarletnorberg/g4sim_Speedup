@@ -11,10 +11,11 @@ from copy import deepcopy
 #EnergyThSimple_vals = [0.01, 0.015, 0.05, 0.1, 0.15]#, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1.0]
 #Energy_vals = [0, 5, 10, 15, 20]#, 25, 30, 35, 40, 45, 50, 60, 65, 70, 75, 80, 85, 90, 95, 100, 200, 300]
 
-#EnergyThSimple_vals = [0.015, 0.1, 0.3, 0.6, 1.0]
-Energy_GammaVals = [10, 0, 30, 60, 200]
-Energy_vals = [5, 0, 30, 60, 200]
-
+Prod_Cuts=[0.5]
+EnergyThSimple_vals = [0.01, 0.015, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.6, 0.8, 1.0]
+#Energy_GammaVals = [5,10, 0, 30, 60, 200]
+#Energy_vals = [10, 0, 30, 60, 200]
+#Prod_Cuts=[0.5, 1, 2, 5, 10, 12, 14, 18, 20]
 ### function for recursive for-loops ###
 
 ## The function takes 5 arguments, the position, a list of parameters,
@@ -48,9 +49,10 @@ def varyAll(pos,paramlist,pars,sig,sigs):
 ## running at least two parameters and two lists of values for each
 
 params = OrderedDict([
-	#("EnergyThSimple", EnergyThSimple_vals),
-    ("RusRoGammaEnergyLimit", Energy_GammaVals),
-	("RusRoNeutronEnergyLimit", Energy_vals)
+	("EnergyThSimple", EnergyThSimple_vals),
+    #("RusRoGammaEnergyLimit", Energy_GammaVals),
+	#("RusRoNeutronEnergyLimit", Energy_vals)
+    #("ProductionCut", Prod_Cuts)
 ])
 
 parameters = []
@@ -61,18 +63,20 @@ print("")
 
 # for-loops the set of values
 for VALS in sigs:
-	print(parameters, VALS)
 	print(" ")
 	PARS = str(parameters).strip("[]").replace(" ","").replace("'","")       # makes a string of the parameter list; elimiates unwanted characters
 	VALS = str(VALS).strip("()").replace(" ","")                             # makes a string of the list of values; eliminates unwanted characters
-
+	if VALS[-1] == ",":
+	        VALS=VALS[:-1]
+	print(parameters, VALS)
 	## Parsing
 	INPUT = str('paramNames=%s paramValues=%s'%(PARS,VALS))                  # argumets to parse in Running
 	LOG = "log_"+str(PARS).replace(",","_")+"_"+str(VALS).replace(",","_")   # log file for current parameters and values
-
+	print ("BLAHTRYU", INPUT)
 	## Running
-	os.system("cmsRun PPD_RunIISummer20UL17SIM_0_cfg.py "+INPUT+" >& "+LOG+".txt")            # cmsRun of config into LOG
-	#os.system("python PPD_RunIISummer20UL17SIM_0_cfg.py "+INPUT+" >& "+LOG+".txt dump=1")      # config dump into LOG
+	#os.system("cmsRun PPD_RunIISummer20UL17SIM_0_cfg.py inputFiles=PPD-RunIISummer20UL17GEN-00001.root"+INPUT+" >& "+LOG+".txt")            # cmsRun of config into LOG
+	os.system("cmsRun PPD_RunIISummer20UL17SIM_0_cfg.py "+INPUT+" >& "+LOG+".txt")
+    #os.system("python PPD_RunIISummer20UL17SIM_0_cfg.py "+INPUT+" >& "+LOG+".txt dump=1")      # config dump into LOG
 
 		
 	## run-time print

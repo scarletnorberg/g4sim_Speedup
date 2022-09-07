@@ -6,8 +6,11 @@
 import FWCore.ParameterSet.Config as cms
 
 from Configuration.Eras.Era_Run2_2017_cff import Run2_2017
-from g4sim_Speedup.VaraParams.optGenSim import options, resetSeeds
+from g4SimHit_SpeedUp.VarParameters.optGenSim import options, resetSeeds
 
+#opt = VarParsing.VarParsing ('analysis')
+#opt.register("paramNames", "", VarParsing.VarParsing.multiplicity.list, VarParsing.VarParsing.varType.string,'')
+#opt.register("paramValues", "", VarParsing.VarParsing.multiplicity.list, VarParsing.VarParsing.varType.float,'')
 process = cms.Process('SIM',Run2_2017)
 
 # import of standard configurations
@@ -26,10 +29,14 @@ process.maxEvents = cms.untracked.PSet(
     input = cms.untracked.int32(1000),
     output = cms.optional.untracked.allowed(cms.int32,cms.PSet)
 )
-
+#opt.parseArguments()
 # Input source
+#inputFiles = [ ]
+#inFile='TOP-RunIISummer19UL18wmLHEGEN-00006.root'
+#for pf in options._inFiles:
+#    process =pf.apply(process)
 process.source = cms.Source("PoolSource",
-    fileNames = cms.untracked.vstring('file:PPD-RunIISummer20UL17GEN-00001.root'),
+    fileNames = cms.untracked.vstring('file:'+options.inputroot+'.root'),
     secondaryFileNames = cms.untracked.vstring()
 )
 
@@ -59,7 +66,7 @@ process.options = cms.untracked.PSet(
     throwIfIllegalParameter = cms.untracked.bool(True),
     wantSummary = cms.untracked.bool(False)
 )
-
+print (options)
 # Production Info
 process.configurationMetadata = cms.untracked.PSet(
     annotation = cms.untracked.string('--python_filename nevts:1000'),
@@ -81,7 +88,7 @@ process.RAWSIMoutput = cms.OutputModule("PoolOutputModule",
     outputCommands = process.RAWSIMEventContent.outputCommands,
     splitLevel = cms.untracked.int32(0)
 )
-
+print ("1 ",options)
 # Additional output definition
 
 # Other statements
@@ -123,10 +130,8 @@ process = customise(process)
 # Customisation from command line
 for p in options._params:
         process = p.apply(process)
-
 # To test if the values of the parameter are changing.
 # Make sure to add dump=True in the cmsRun command in the Script
 if options.dump:
     print process.dumpPython()
     sys.exit(0)
-
