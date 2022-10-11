@@ -118,10 +118,9 @@ for k,v in files_dict.items():
         doubleparam_values_y.append(v[0][0][1])
         doubleparam_time.append(v[0][1])
 
-nominalsingletime = []
-nominaldoubletime = []
-
+nominaltimeratio = []
 nominaltime = 0.0   # place-holder to replace with the nominal time of the chosen run
+
 ### to get the nominal times of the runs ###
 for k,v in files_dict.items():
     filename = k.replace(directory,"")
