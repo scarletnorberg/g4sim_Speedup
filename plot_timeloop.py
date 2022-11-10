@@ -11,12 +11,13 @@ import glob
 import re
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d.axes3d import Axes3D
+from mpl_toolkits import mplot3d
 import numpy as np 
 
 
 baseline_dict = {"ProductionCut_baseline": 1.0, "RusRoNeutronEnergyLimit_baseline": 10.0}   ## baseline dictionary
 
-directory = 'run10/'  ## directory where files are located
+directory = 'run5b/'  ## directory where files are located
 
 Files = glob.glob(directory + '*.txt')
 
@@ -25,7 +26,6 @@ files_dict = dict()
 ### for-loop to fill files_dict with each log file in directory ###
 for f in Files:
     files_dict[f] = []
-
 
 ### function that returns the parameter values and the desired time-loop of the run ###
 def logline(filenames):
@@ -118,9 +118,10 @@ for k,v in files_dict.items():
         doubleparam_values_y.append(v[0][0][1])
         doubleparam_time.append(v[0][1])
 
-nominaltimeratio = []
-nominaltime = 0.0   # place-holder to replace with the nominal time of the chosen run
+nominalsingletime = []
+nominaldoubletime = []
 
+nominaltime = 0.0   # place-holder to replace with the nominal time of the chosen run
 ### to get the nominal times of the runs ###
 for k,v in files_dict.items():
     filename = k.replace(directory,"")
@@ -171,25 +172,33 @@ for p in paramtoplot_list:
 
     if amount ==0:
         print("plotting ", p)
+
         fig = plt.figure(figsize=(8,6))
         plt.xlabel(p, size=15)
         plt.ylabel("Time loop", size=15)
-        plt.scatter(singleparam_values,singleparam_time)
-        ##plt.scatter(singleparam_values, nominalsingletime, color='g')
+        scatter = plt.scatter(singleparam_values, singleparam_time, c=nominaltimeratio, cmap='hot')
+
+        plt.colorbar(scatter, label="Time Loop ratio")
         plt.savefig(p+"_Timeloop.png")
         plt.close()
 
     else:
         print("plotting ", p)
+
         fig = plt.figure(figsize=(8,6))
-        axes3d = Axes3D(fig)
+        ax = plt.axes(projection = "3d")
         paramlabels = p.split("_")
+
+        color_map = plt.get_cmap('hot')
+
         z = np.linspace(min(nominaltimeratio),max(nominaltimeratio),num=45)
-        plt.xlabel(paramlabels[0], size=15)
-        plt.ylabel(paramlabels[1], size=15)
-        axes3d.plot(doubleparam_values_x, doubleparam_values_y, nominaltimeratio)
-        axes3d.scatter3D(doubleparam_values_x, doubleparam_values_y, nominaltimeratio, color=plt.cm.cool(z/max(z)))
-        axes3d.set_zlabel("Time Loop", size=15)
-        plt.savefig(p+"_Timeloop.png", bbox_inches="tight")
+        plt.xlabel(paramlabels[0], size=12)
+        plt.ylabel(paramlabels[1], size=12)
+        line = ax.plot3D(doubleparam_values_x, doubleparam_values_y, nominaltimeratio)
+        scatter = ax.scatter3D(doubleparam_values_x, doubleparam_values_y, nominaltimeratio, c=nominaltimeratio,cmap=color_map)
+
+        ax.set_zlabel("Time Loop", size=12)
+        plt.colorbar(scatter)
+        plt.savefig(p+"_Timeloop.png")
         plt.close()
 
